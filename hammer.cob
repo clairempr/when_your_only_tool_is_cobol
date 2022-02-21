@@ -22,8 +22,20 @@
        fd html-file.
        01 html-line				pic x(255).
        
+       working-storage section.
+       01 user-message				pic x(255) value space.
+       78 default-message			value "HELLO WORLD".
+       
        
        procedure division.
+       
+      * Get user input
+       display "Enter a a message: ".
+       accept user-message.
+
+       if user-message equals space then
+           move default-message		to user-message
+       end-if.
        
       * Open html file
        open output html-file.
@@ -53,10 +65,16 @@
       
        initialize html-line.
        string	"<h1 class=" quote "display-1" quote "> " 
-       	"<span class=" quote "hello-world" quote ">HELLO WORLD</span>"
+       	"<span class=" quote "hello-world" quote ">"	
+       					into html-line.
+       write html-line.
+       
+       write html-line 			from user-message.
+       
+       initialize html-line.
+       string	"</span>"
         	"</h1></div></body></html>"	into html-line.
-       write html-line. 	
-
+       write html-line.  	
 
       * Close html file
        close html-file.
@@ -66,6 +84,7 @@
        
        
        write-style.
+      * Add inline style 
            initialize html-line.
            string "<style>"
         	   ".hello-world {"
@@ -91,6 +110,7 @@
            write html-line.
            
        write-web-fonts.
+      * Load Google web fonts 
            initialize html-line.
       	   string "<link href=" quote
       	          "https://fonts.googleapis.com/css?family="
